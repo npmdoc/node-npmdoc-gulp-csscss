@@ -1,0 +1,156 @@
+<div class="apidocDiv">
+<style>
+/*csslint
+*/
+.apidocDiv {
+    background: #fff;
+    font-family: Arial, Helvetica, sans-serif;
+}
+.apidocDiv a[href] {
+    color: #33f;
+    font-weight: bold;
+    text-decoration: none;
+}
+.apidocDiv a[href]:hover {
+    text-decoration: underline;
+}
+.apidocCodeCommentSpan {
+    background: #bbf;
+    color: #000;
+    display: block;
+}
+.apidocCodeKeywordSpan {
+    color: #d00;
+    font-weight: bold;
+}
+.apidocCodePre {
+    background: #eef;
+    border: 1px solid;
+    color: #777;
+    padding: 5px;
+    white-space: pre-wrap;
+}
+.apidocFooterDiv {
+    margin-top: 20px;
+    text-align: center;
+}
+.apidocModuleLi {
+    margin-top: 10px;
+}
+.apidocSectionDiv {
+    border-top: 1px solid;
+    margin-top: 20px;
+}
+.apidocSignatureSpan {
+    color: #777;
+    font-weight: bold;
+}
+</style>
+<h1>api documentation for
+    <a
+
+        href="https://github.com/morishitter/gulp-csscss"
+
+    >gulp-csscss (v0.1.2)</a>
+</h1>
+<h4>gulp plugin for running csscss</h4>
+<div class="apidocSectionDiv"><a
+    href="#apidoc.tableOfContents"
+    id="apidoc.tableOfContents"
+><h1>table of contents</h1></a><ol>
+
+    <li class="apidocModuleLi"><a href="#apidoc.module.gulp-csscss">module gulp-csscss</a><ol>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.gulp-csscss.gulp-csscss">
+            function <span class="apidocSignatureSpan"></span>gulp-csscss
+            <span class="apidocSignatureSpan">(options)</span>
+            </a>
+
+        </li>
+
+    </ol></li>
+
+</ol></div>
+
+<div class="apidocSectionDiv">
+<h1><a href="#apidoc.module.gulp-csscss" id="apidoc.module.gulp-csscss">module gulp-csscss</a></h1>
+
+
+    <h2>
+        <a href="#apidoc.element.gulp-csscss.gulp-csscss" id="apidoc.element.gulp-csscss.gulp-csscss">
+        function <span class="apidocSignatureSpan"></span>gulp-csscss
+        <span class="apidocSignatureSpan">(options)</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">function gulpCsscss(options) {
+    options = options || {};
+
+    var passedArgs = dargs(options, [&#x27;bundleExec&#x27;]);
+    var bundleExec = options.bundleExec;
+
+    try {
+        which.sync(&#x27;csscss&#x27;);
+    } catch (err) {
+        throw new gutil.PluginError(&#x27;gulp-csscss&#x27;, &#x27;You need to have Ruby and CSSCSS installed and in your PATH for this task to
+ work.&#x27;);
+    }
+
+    return through.obj(function (file, enc, cb) {
+        var self = this;
+
+        if (file.isNull() || path.basename(file.path)[0] === &#x27;_&#x27;) {
+            this.push(file);
+            return cb();
+        }
+
+        if (file.isStream()) {
+            this.emit(&#x27;error&#x27;, new gutil.PluginError(&#x27;gulp-csscss&#x27;, &#x27;Streaming not supported&#x27;));
+            return cb();
+        }
+
+        tempWrite(file.contents, path.basename(file.path), function (err, tempFile) {
+            if (err) {
+                self.emit(&#x27;error&#x27;, new gutil.PluginError(&#x27;gulp-csscss&#x27;, err));
+                self.push(file);
+                return cb();
+            }
+
+            var args = [
+                file.path
+            ].concat(passedArgs);
+
+            var command = &#x22;csscss&#x22;;
+
+            if (bundleExec) {
+                args.unshift(&#x27;bundle&#x27;, &#x27;exec&#x27;);
+                command = &#x22;bundle exec csscss&#x22;
+            }
+
+            var child = exec(command + &#x27; &#x22;&#x27; + tempFile + &#x27;&#x22;&#x27;, function(err, stdout, stderr) {
+                if (!err) {
+                    console.log(&#x22;Result of running CSSCSS:&#x22;);
+                    console.log(stdout);
+                } else {
+                    console.log(err);
+                    console.log(err.code);
+                    console.log(err.signal);
+                }
+            });
+        });
+    });
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    </ul>
+
+
+</div>
+
+<div class="apidocFooterDiv">
+    [ this document was created with
+    <a href="https://github.com/kaizhu256/node-utility2" target="_blank">utility2</a>
+    ]
+</div>
+</div>
